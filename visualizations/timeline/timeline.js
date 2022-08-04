@@ -59,7 +59,8 @@ function draw(separated, topicsOfInterest, topicData) {
 
     var yAxis = d3.svg.axis()
         .scale(y)
-        .orient("left");
+        .orient("left")
+        .tickFormat(d3.format(".00%"))
 
     var line = d3.svg.line()
         // .interpolate("basis")
@@ -78,7 +79,7 @@ function draw(separated, topicsOfInterest, topicData) {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.json('freq_data.json', function (jsonData) {
+    d3.json('freq_data_8-3.json', function (jsonData) {
 
         var data = jsonData.map(function (d) {
             var datumObj = Object()
@@ -265,7 +266,7 @@ function draw(separated, topicsOfInterest, topicData) {
 
                 d3.selectAll(".mouse-per-line")
                     .attr("transform", function (d, i) {
-                        console.log(width / mouse[0])
+                        // console.log(width / mouse[0])
                         var xDate = x.invert(mouse[0]),
                             bisect = d3.bisector(function (d) { return d.date; }).right;
                         idx = bisect(d.values, xDate);
@@ -286,7 +287,7 @@ function draw(separated, topicsOfInterest, topicData) {
                         }
 
                         d3.select(this).select('text')
-                            .text(y.invert(pos.y).toFixed(2));
+                            .text(d3.format(".01%")(y.invert(pos.y)));
 
                         return "translate(" + mouse[0] + "," + pos.y + ")";
                     });
@@ -298,9 +299,10 @@ function draw(separated, topicsOfInterest, topicData) {
 $(document).ready(function () {
     console.log("ready!");
 
-    var topicsOfInterest = [12, 7, 19]
+    var topicsOfInterest = [14,13,12]
 
     d3.tsv('topics.tsv', function (topicData) {
+
         var checkboxes = d3.select("#checkboxDiv").selectAll("input")
             .data(topicData.slice(1,))
             .enter().append('p').append("label").attr('class', 'cbLabel')
@@ -318,7 +320,10 @@ $(document).ready(function () {
             }
         })
         var separated = false
+        // initialize graph
         draw(separated, topicsOfInterest, topicData)
+
+        // on dropdown change
         d3.select('#mediasource').on('change', function (d) {
             console.log('dropdown changed')
             var separated = (d3.select(this).node().value === 'separated') ? true : false;
