@@ -28,7 +28,13 @@ function draw(separated, topicsOfInterest, topicData) {
     var y = d3.scale.linear()
         .range([height, 0]);
 
-    var color = d3.scale.category20();
+    var color;
+    if (separated) {
+        color = d3.scale.category20();
+    } else {
+        color = d3.scale.category10();
+    }
+
 
     // time stuff
     var ticks = ['20211001',
@@ -56,7 +62,7 @@ function draw(separated, topicsOfInterest, topicData) {
         .orient("left");
 
     var line = d3.svg.line()
-        .interpolate("basis")
+        // .interpolate("basis")
         .x(function (d) {
             return x(d.date);
         })
@@ -83,7 +89,7 @@ function draw(separated, topicsOfInterest, topicData) {
                     datumObj[`${topicData[t + 1].description} (Russian)`] = d[`russian_freq_topic_${t}`]
                     datumObj[`${topicData[t + 1].description} (Western)`] = d[`western_freq_topic_${t}`]
                 } else {
-                    datumObj[`${topicData[t + 1].description} (All)`] = d[`total_freq_topic_${t}`]
+                    datumObj[`${topicData[t + 1].description} (Both)`] = d[`total_freq_topic_${t}`]
                 }
             })
             return datumObj
@@ -182,6 +188,7 @@ function draw(separated, topicsOfInterest, topicData) {
             });
 
         city.append("text")
+        .attr('class','sideLabel')
             .datum(function (d) {
                 return {
                     name: d.name,
@@ -195,7 +202,7 @@ function draw(separated, topicsOfInterest, topicData) {
             .attr("dy", ".35em")
             .text(function (d) {
                 return d.name;
-            }).style('font-size', '10px')
+            })
 
         var mouseG = svg.append("g")
             .attr("class", "mouse-over-effects");
@@ -291,7 +298,7 @@ function draw(separated, topicsOfInterest, topicData) {
 $(document).ready(function () {
     console.log("ready!");
 
-    var topicsOfInterest = [16]
+    var topicsOfInterest = [12, 7, 19]
 
     d3.tsv('topics.tsv', function (topicData) {
         var checkboxes = d3.select("#checkboxDiv").selectAll("input")
@@ -310,7 +317,7 @@ $(document).ready(function () {
                 d3.select(this).property('checked', false);
             }
         })
-        var separated = true
+        var separated = false
         draw(separated, topicsOfInterest, topicData)
         d3.select('#mediasource').on('change', function (d) {
             console.log('dropdown changed')

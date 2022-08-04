@@ -64,7 +64,9 @@ function draw(category) {
         .style("opacity", 0.75)
         .text("co-occurrence threshold")
 
-    d3.json(`${category}ngramNet4.json`, function (error, graph) {
+    var n = 4;
+    d3.select('#n').text(n)
+    d3.json(`${category}ngramNet${n}.json`, function (error, graph) {
         if (error) throw error;
 
         graph.links.forEach(function (d, i) { d.i = i; });

@@ -13,15 +13,15 @@ var svg = d3.select("#histogram")
           "translate(" + margin.left + "," + margin.top + ")");
 
 // get the data
-d3.json("sentData.json", function(jsonData) {
+d3.json("reading_scores.json", function(jsonData) {
 
   var data = jsonData.filter(d => ['russian','western'].includes(d.category))
-                      .filter(d => d.sentTopicID == 2)
-                      .map(function(d) { return {'type' : d.category, 'value' : d.sentiVal} })
+                      // .filter(d => d.sentTopicID == 2)
+                      .map(function(d) { return {'type' : d.category, 'value' : d.fkscore} })
 
   // X axis: scale and draw:
   var x = d3.scaleLinear()
-      .domain([-1,1])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
+      .domain([0,50])     // can use this instead of 1000 to have the max of data: d3.max(data, function(d) { return +d.price })
       .range([0, width]);
   svg.append("g")
       .attr("transform", "translate(0," + height + ")")
@@ -69,9 +69,9 @@ d3.json("sentData.json", function(jsonData) {
         .style("opacity", 0.6)
 
   // Handmade legend
-  svg.append("circle").attr("cx",width-100).attr("cy",30).attr("r", 6).style("fill", "teal")
-  svg.append("circle").attr("cx",width-100).attr("cy",60).attr("r", 6).style("fill", "tomato")
-  svg.append("text").attr("x", width-80).attr("y", 30).text("Western Media").style("font-size", "15px").attr("alignment-baseline","middle")
-  svg.append("text").attr("x", width-80).attr("y", 60).text("Russian State Media").style("font-size", "15px").attr("alignment-baseline","middle")
+  svg.append("circle").attr("cx",width-500).attr("cy",30).attr("r", 6).style("fill", "teal")
+  svg.append("circle").attr("cx",width-500).attr("cy",60).attr("r", 6).style("fill", "tomato")
+  svg.append("text").attr("x", width-480).attr("y", 30).text("Western Media").style("font-size", "15px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", width-480).attr("y", 60).text("Russian State Media").style("font-size", "15px").attr("alignment-baseline","middle")
 
 });

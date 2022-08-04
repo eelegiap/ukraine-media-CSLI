@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <title>Topic Timeline</title>
     <script data-require="d3@3.5.3" data-semver="3.5.3" src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.3/d3.js"></script>
     <style>
         body {
@@ -24,13 +25,18 @@
             stroke: steelblue;
             stroke-width: 1.5px;
         }
-.cbLabel {
-    font-size: 10px;
-}
-input {
-    margin-left: 5px !important
-}
 
+        .cbLabel {
+            font-size: 10px;
+        }
+
+        input {
+            margin-left: 5px !important
+        }
+
+        .sideLabel {
+            font-size: 12px
+        }
     </style>
 
     <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -54,11 +60,13 @@ input {
 <body>
     <div class="container">
         <div class="row">
-            <h2>Timeline of topics (Russian vs. Western media)</h2>
+            <h2>Timeline of topics (by frequency)</h2>
+            <h4>Russian vs. Western media</h4>
+            <p>Frequency at time point T was calculated with the following equation: </p>
             <select name="mediasource" id="mediasource">
-                <option value="separated">Separated by media source</option>
                 <option value="together">Not separated by media source</option>
-              </select>
+                <option value="separated">Separated by media source</option>
+            </select>
         </div>
         <div class="row">
             <div class="col-md-10" id="timelineParent">
