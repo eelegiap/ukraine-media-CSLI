@@ -1,4 +1,5 @@
 // https://github.com/d3/d3-scale-chromatic#schemeRdBu
+// https://github.com/d3/d3-3.x-api-reference/blob/master/Quantitative-Scales.md
 // https://d3-legend-v3.susielu.com/#size
 
 function draw(category) {
@@ -76,7 +77,7 @@ function draw(category) {
     console.log('category',category)
     console.log('n',n)
     
-    d3.json(`${category}ngramNet${n}_8-4_w_polarity.json`, function (error, graph) {
+    d3.json(`${category}ngramNet${n}_8-5_w_nodeandlinkpolarity.json`, function (error, graph) {
         if (error) throw error;
 
         graph.links.forEach(function (d, i) { d.i = i; });
@@ -98,9 +99,6 @@ function draw(category) {
 
             var link = links_g.selectAll(".link")
                 .data(thresholded_links, function (d) { return d.i; });
-
-            const posPolarity = d3.scale.pow().exponent(.3).domain([0, 1]).range(["#777", "green"])
-            const negPolarity = d3.scale.pow().exponent(.3).domain([-1, 0]).range(["tomato", "#777"])
             // 
             svg.append('text')
                 .attr('x',25)
@@ -133,22 +131,12 @@ function draw(category) {
                 .attr("transform", `translate(${150}, ${25})`)
                 .call(redLegend);
 
-
-            function linkColor(polarity) {
-                if (polarity > 0) {
-                    return posPolarity(polarity)
-                } else if (polarity < 0) {
-                    return negPolarity(polarity)
-                } else {
-                    return "#777"
-                }
-            }
             function strokeSize(val) {
                 return Math.sqrt(Math.sqrt(val))
             }
             link.enter().append("line")
                 .attr("class", "link")
-                .style('stroke', d => linkColor(+d.polarityScore))
+                .style('stroke', d => polarityColor(+d.polarityScore))
                 .style('stroke-opacity', origLinkOpacity)
                 .style("stroke-width", function (d) { return 5 });
                 // .style("stroke-width", function (d) { return d.value });
@@ -232,7 +220,7 @@ function draw(category) {
                         return Math.log(d.occurrences)
                     })
                     .style("fill", function (d) {
-                        return '#777'
+                        return polarityColor(d.nodePolarity)
                     }).style('opacity', 1)
                 d3.select(this)
                     .append("text").text(d.id)
@@ -284,6 +272,18 @@ function draw(category) {
             .call(brush.event);
     });
 }
+const posPolarity = d3.scale.pow().exponent(.3).domain([0, 1]).range(["#777", "green"])
+const negPolarity = d3.scale.pow().exponent(.3).domain([-1, 0]).range(["tomato", "#777"])
+
+function polarityColor(polarity) {
+    if (polarity > 0) {
+        return posPolarity(polarity)
+    } else if (polarity < 0) {
+        return negPolarity(polarity)
+    } else {
+        return "#777"
+    }
+}
 
 $(document).ready(function () {
     console.log("ready!");
@@ -295,12 +295,4 @@ $(document).ready(function () {
         console.log('dropdown changed')
         draw(d3.select(this).node().value)
     })
-    // $('#toggle').change(function () {
-    //     console.log($(this).prop('checked'))
-    //     if ($(this).prop('checked')) {
-    //         draw('notPEN')
-    //     } else {
-    //         draw('PEN')
-    //     }
-    // })
 });

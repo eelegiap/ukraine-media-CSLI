@@ -1,5 +1,6 @@
 // https://bl.ocks.org/larsenmtl/e3b8b7c2ca4787f77d78f58d41c3da91
 function draw(separated, topicsOfInterest, topicData) {
+    var freq_bool = true
     var checkboxes = d3.selectAll('#checkboxDiv input')
 
     checkboxes.each(function (d, i) {
@@ -37,7 +38,8 @@ function draw(separated, topicsOfInterest, topicData) {
 
 
     // time stuff
-    var ticks = ['20211001',
+    var ticks = [
+    // '20211001',
     '20211016',
     '20211101',
     '20211116',
@@ -60,7 +62,7 @@ function draw(separated, topicsOfInterest, topicData) {
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left")
-        .tickFormat(d3.format(".00%"))
+        .tickFormat(yAxisFormat(freq_bool))
 
     var line = d3.svg.line()
         // .interpolate("basis")
@@ -80,17 +82,21 @@ function draw(separated, topicsOfInterest, topicData) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     d3.json('freq_data_8-3.json', function (jsonData) {
-
+        jsonData = jsonData.slice(1,)
+        var freq_str = ''
+        if (freq_bool) {
+            freq_str = 'freq_'
+        }
         var data = jsonData.map(function (d) {
             var datumObj = Object()
             datumObj['date'] = d.date;
             topicsOfInterest.map(function (t) {
                 // datumObj[topicData[t+1].description] = d[`topic_${t}`]
                 if (separated) {
-                    datumObj[`${topicData[t + 1].description} (Russian)`] = d[`russian_freq_topic_${t}`]
-                    datumObj[`${topicData[t + 1].description} (Western)`] = d[`western_freq_topic_${t}`]
+                    datumObj[`${topicData[t + 1].description} (Russian)`] = d[`russian_${freq_str}topic_${t}`]
+                    datumObj[`${topicData[t + 1].description} (Western)`] = d[`western_${freq_str}topic_${t}`]
                 } else {
-                    datumObj[`${topicData[t + 1].description} (Both)`] = d[`total_freq_topic_${t}`]
+                    datumObj[`${topicData[t + 1].description} (Both)`] = d[`total_${freq_str}topic_${t}`]
                 }
             })
             return datumObj
@@ -172,7 +178,10 @@ function draw(separated, topicsOfInterest, topicData) {
             .attr("y", 6)
             .attr("dy", ".71em")
             .style("text-anchor", "end")
-            .text("Frequency of sentences in topic")
+            .text(function() {
+                if (freq_bool) { return "Frequency of sentences in topic" } 
+                return "Count of sentences in topic" 
+            })
 
         var city = svg.selectAll(".city")
             .data(cities)
@@ -287,13 +296,19 @@ function draw(separated, topicsOfInterest, topicData) {
                         }
 
                         d3.select(this).select('text')
-                            .text(d3.format(".01%")(y.invert(pos.y)));
+                            .text(yAxisFormat(freq_bool)(y.invert(pos.y)));
 
                         return "translate(" + mouse[0] + "," + pos.y + ")";
                     });
             });
     })
-
+    function yAxisFormat(freq_bool) {
+        if (freq_bool) {
+            return d3.format(".01%")
+        } else {
+            return d3.format("00")
+        }
+    }
 }
 
 $(document).ready(function () {
