@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<title>Co-occurrence Network (Russian State Media)</title>
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-color@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-interpolate@3"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-scale-chromatic@3"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3-legend/1.1.0/d3-legend.js"></script>
+<!-- <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script> -->
+<!-- <script src="https://unpkg.com/d3-simple-slider"></script> -->
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<style>
+    .node circle {
+        stroke: #fff;
+        stroke-width: 1.5px;
+    }
+/* 
+    .link {
+        stroke: #999;
+    } */
+    .legendSizeLine {
+        stroke: #777
+    }
+
+    .axis {
+        opacity: 0.75;
+        font: 10px sans-serif;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+    }
+
+    .axis .domain {
+        fill: none;
+        stroke: #000;
+        stroke-opacity: .5;
+        stroke-width: 4px;
+        stroke-linecap: round;
+    }
+
+    .axis .halo {
+        fill: none;
+        stroke: #ddd;
+        stroke-width: 3px;
+        stroke-linecap: round;
+    }
+
+    .slider {
+        position: absolute;
+    }
+
+    .slider .handle {
+        fill: #fff;
+        stroke: #000;
+        stroke-opacity: .5;
+        stroke-width: 1.25px;
+        cursor: grab;
+    }
+
+    img {
+        width: 400px;
+        height: 40px;
+        display: inline;
+        margin: 15px;
+    }
+    rect {
+        opacity: .75;
+    }
+</style>
+
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <br>
+            <!-- <input id='toggle' type="checkbox" checked data-toggle="toggle" data-on="All Data" data-off="PEN Only"> -->
+        </div>
+        <div class="row" style="text-align: center">
+            <h2>Co-occurrence and sentiment network</h2>
+            <h3>Articles relating to Ukraine from Western and Russian State Media</h3>
+            <p>Sliding window size: <span id="n"></span>. For example, words <i>s</i> and <i>t</i> have a co-occurrence 
+                of 100 if they occur together in at 100 sliding windows. Lowering the co-occurrence threshold to <i>c</i>
+                will disappear those links with less than <i>c</i> co-occurrences. The color of a link is based on the 
+                average polarity of sentences containing a co-occurrence window with words <i>s</i> and <i>t</i>
+                (using the rule-based VADER sentiment analyzer). A polarity of -1 is the most negative, while a polarity of +1 is 
+                the most positive. A polarity of 0 is neutral. Polarity values get to be quite small after averaging over >100 sentences.
+            </p>
+
+            <select name="category" id="category">
+                <option value="western">Western Media</option>
+                <option value="russian">Russian State Media</option>
+            </select>
+        </div>
+    </div>
+</body>
+
+<script src="network.js"></script>

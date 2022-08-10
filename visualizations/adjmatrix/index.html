@@ -59,7 +59,7 @@
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    d3.json("westernnetwork5_topic14_adjmatrix.json", function (miserables) {
+    d3.json("topic_data/westernnetwork5_topic13_adjmatrix.json", function (miserables) {
         var matrix = [],
             nodes = miserables.nodes,
             n = nodes.length;

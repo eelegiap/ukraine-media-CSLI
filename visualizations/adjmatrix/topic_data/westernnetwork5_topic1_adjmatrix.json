@@ -1,0 +1,1 @@
+{"nodes": [{"id": "russia", "occurrences": 110, "nodePolarity": -0.00046363636363636783}, {"id": "say", "occurrences": 101, "nodePolarity": -0.001950495049504953}], "links": [{"source": 0, "target": 1, "value": 9, "polarityScore": -0.003888888888888889}]}
